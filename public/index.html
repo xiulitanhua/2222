@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self' *.is.autonavi.com t*.tianditu.gov.cn;
+                   script-src 'self' 'unsafe-eval' cdn.jsdelivr.net;
+                   style-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+                   img-src * data: blob:;
+                   connect-src *">
+    
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
+    <!-- 预加载资源 -->
+    <link rel="preload" href="<%= BASE_URL %>js/ol.js" as="script">
+    <link rel="preconnect" href="https://webrd01.is.autonavi.com">
+    <link rel="preconnect" href="http://t0.tianditu.gov.cn">
+    <link rel="dns-prefetch" href="https://webrd01.is.autonavi.com">
+    <link rel="dns-prefetch" href="http://t0.tianditu.gov.cn">
+
+    <!-- 兼容性方案 -->
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default,es2015,es2016,es2017,es2018,es2019,IntersectionObserver"></script>
+  </head>
+  <body>
+    <noscript>
+      <strong>请启用JavaScript以正常使用地图功能。地图服务由：
+        <a href="https://lbs.amap.com" target="_blank">高德地图</a>和
+        <a href="https://www.tianditu.gov.cn" target="_blank">天地图</a>提供支持
+      </strong>
+    </noscript>
+    <div id="app">
+      <!-- 添加加载状态提示 -->
+      <div class="global-loading" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)">
+        <svg class="loading-spinner" width="50" height="50" viewBox="0 0 50 50">
+          <circle cx="25" cy="25" r="20" fill="none" stroke="#0078d4" stroke-width="4"/>
+        </svg>
+        <div>地图引擎初始化中...</div>
+      </div>
+    </div>
+    
+    <!-- 生产环境自动注入 -->
+    <% if (process.env.NODE_ENV === 'production') { %>
+      <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('<%= BASE_URL %>service-worker.js')
+        }
+      </script>
+    <% } %>
+  </body>
+</html>
+
